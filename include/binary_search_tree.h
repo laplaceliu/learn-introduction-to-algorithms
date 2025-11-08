@@ -21,6 +21,9 @@ public:
 
     BSTNode(const T& k) : key(k), left(nullptr), right(nullptr), parent(nullptr) {}
     
+    // 虚析构函数以支持多态
+    virtual ~BSTNode() = default;
+    
     // 判断是否为叶子节点
     bool is_leaf() const {
         return left == nullptr && right == nullptr;
