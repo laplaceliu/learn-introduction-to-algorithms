@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "../../include/rod_cutting.h"
+#include "rod_cutting.h"
 
 using namespace algorithms;
 

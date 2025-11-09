@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 #include <iomanip>
-#include "../../include/graph_representation.h"
+#include "graph_representation.h"
 
 using namespace algorithms;
 

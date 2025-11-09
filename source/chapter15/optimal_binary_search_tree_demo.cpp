@@ -3,7 +3,7 @@
 #include <string>
 #include <iomanip>
 #include <cmath>
-#include "../../include/optimal_binary_search_tree.h"
+#include "optimal_binary_search_tree.h"
 
 using namespace algorithms;
 

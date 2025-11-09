@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "../../include/longest_common_subsequence.h"
+#include "longest_common_subsequence.h"
 
 using namespace algorithms;
 
