@@ -219,6 +219,33 @@ public:
         return count;
     }
     
+    // 获取节点的出边
+    std::vector<GraphEdge> get_out_edges(int node_id) const {
+        int node_index = find_node_index(node_id);
+        if (node_index == -1) {
+            return {};
+        }
+        
+        std::vector<GraphEdge> edges;
+        for (const auto& edge : adjacency_list[node_index]) {
+            edges.push_back(edge);
+        }
+        return edges;
+    }
+    
+    // 获取所有边
+    std::vector<GraphEdge> get_all_edges() const {
+        std::vector<GraphEdge> edges;
+        
+        for (size_t i = 0; i < nodes.size(); i++) {
+            int node_id = nodes[i].id;
+            auto node_edges = get_out_edges(node_id);
+            edges.insert(edges.end(), node_edges.begin(), node_edges.end());
+        }
+        
+        return edges;
+    }
+    
     // 检查图是否是有向图
     bool is_directed() const {
         return directed;
@@ -382,6 +409,43 @@ public:
         }
         
         return count;
+    }
+    
+    // 获取节点的出边
+    std::vector<GraphEdge> get_out_edges(int node_id) const {
+        int node_index = find_node_index(node_id);
+        if (node_index == -1) {
+            return {};
+        }
+        
+        std::vector<GraphEdge> edges;
+        for (size_t i = 0; i < nodes.size(); i++) {
+            int weight = adjacency_matrix[node_index][i];
+            if (weight != 0) {
+                edges.emplace_back(node_id, nodes[i].id, weight);
+            }
+        }
+        return edges;
+    }
+    
+    // 获取所有边
+    std::vector<GraphEdge> get_all_edges() const {
+        std::vector<GraphEdge> edges;
+        
+        for (size_t i = 0; i < nodes.size(); i++) {
+            int from_node_id = nodes[i].id;
+            for (size_t j = 0; j < nodes.size(); j++) {
+                int weight = adjacency_matrix[i][j];
+                if (weight != 0) {
+                    // 对于无向图，只添加一次边（i < j）
+                    if (directed || i < j) {
+                        edges.emplace_back(from_node_id, nodes[j].id, weight);
+                    }
+                }
+            }
+        }
+        
+        return edges;
     }
     
     // 检查图是否是有向图
