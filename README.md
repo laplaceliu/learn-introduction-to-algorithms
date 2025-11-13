@@ -34,6 +34,7 @@ learn-introduction-to-algorithms/
 │   ├── matrix_chain_multiplication.h # 15.2章矩阵链乘法
 │   ├── longest_common_subsequence.h # 15.4章最长公共子序列
 │   ├── optimal_binary_search_tree.h # 15.5章最优二叉搜索树
+│   ├── amortized_analysis.h # 17章摊还分析
 │   ├── b_tree.h           # 18章B树
 │   ├── graph_representation.h # 22.1章图的表示
 │   ├── topological_sort.h  # 22.4章拓扑排序
@@ -70,6 +71,8 @@ learn-introduction-to-algorithms/
     │   ├── matrix_chain_multiplication_demo.cpp # 15.2章矩阵链乘法演示程序
     │   ├── longest_common_subsequence_demo.cpp # 15.4章最长公共子序列演示程序
     │   └── optimal_binary_search_tree_demo.cpp # 15.5章最优二叉搜索树演示程序
+    ├── chapter17/
+    │   └── amortized_analysis_demo.cpp # 17章摊还分析演示程序
     ├── chapter18/
     │   └── b_tree_demo.cpp           # 18章B树演示程序
     ├── chapter22/
@@ -377,6 +380,39 @@ learn-introduction-to-algorithms/
 - **性能保证**: 最坏情况线性时间选择算法
 - **代码复用**: 基于第7章快速排序的分区操作
 - **模板化设计**: 支持任意可比较数据类型
+
+### 第17章 摊还分析
+
+#### 17.1节 聚合分析
+- **二进制计数器**: 实现k位二进制计数器，分析INCREMENT操作的摊还代价
+- **翻转次数分析**: 每个位翻转的频率不同，最低位每次翻转，最高位每2^k次翻转
+- **总代价分析**: n次INCREMENT操作的总翻转次数为O(n)，平均每次操作O(1)
+
+#### 17.2节 记账方法
+- **支持MULTIPOP的栈**: 实现支持MULTIPOP操作的栈数据结构
+- **信用分配**: PUSH操作分配2单位摊还代价（1单位实际代价，1单位信用）
+- **信用使用**: POP和MULTIPOP操作使用存储的信用，摊还代价为0
+- **摊还分析**: 确保任何时刻信用非负，总摊还代价是总实际代价的上界
+
+#### 17.3-17.4节 势能方法和动态表
+- **动态表实现**: 支持自动扩张和收缩的动态表数据结构
+- **势能函数**: Φ(T) = 2 * num(T) - size(T)，其中num为元素数，size为表容量
+- **扩张策略**: 当表满时容量加倍，代价为当前元素数量
+- **收缩策略**: 当元素数≤容量/4时容量减半，避免频繁扩张收缩
+- **摊还代价**: 每次插入操作的摊还代价为3，每次删除操作的摊还代价为1
+
+#### 核心功能
+- **三种分析方法**: 完整实现聚合分析、记账方法、势能方法
+- **经典数据结构**: 二进制计数器、支持MULTIPOP的栈、动态表
+- **性能监控**: 实时跟踪实际代价、摊还代价、势能变化
+- **边界处理**: 完善的异常处理和边界情况处理
+
+#### 实现特性
+- **算法导论标准实现**: 严格遵循第17章的算法描述和示例
+- **完整测试覆盖**: 包括所有三种摊还分析方法的验证
+- **可视化输出**: 详细的表格输出展示操作序列和代价分析
+- **理论验证**: 自动验证摊还分析的正确性和一致性
+- **教育价值**: 清晰展示摊还分析的思想和应用场景
 
 ### 第10章 基本数据结构
 
@@ -1035,6 +1071,9 @@ make -j$(nproc)
 
 # 中位数和顺序统计量演示
 ./build/bin/order_statistics_demo
+
+# 摊还分析演示
+./build/bin/amortized_analysis_demo
 
 # 矩阵链乘法演示
 ./build/bin/matrix_chain_multiplication_demo
