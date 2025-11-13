@@ -30,6 +30,7 @@ learn-introduction-to-algorithms/
 │   ├── order_statistic_tree.h # 14.1章动态顺序统计
 │   ├── interval_tree.h     # 14章区间树
 │   ├── rod_cutting.h      # 15章钢条切割
+│   ├── matrix_chain_multiplication.h # 15.2章矩阵链乘法
 │   ├── longest_common_subsequence.h # 15.4章最长公共子序列
 │   ├── optimal_binary_search_tree.h # 15.5章最优二叉搜索树
 │   ├── b_tree.h           # 18章B树
@@ -63,6 +64,7 @@ learn-introduction-to-algorithms/
     │   └── interval_tree_demo.cpp     # 14章区间树演示程序
     ├── chapter15/
     │   ├── rod_cutting_demo.cpp       # 15章钢条切割演示程序
+    │   ├── matrix_chain_multiplication_demo.cpp # 15.2章矩阵链乘法演示程序
     │   ├── longest_common_subsequence_demo.cpp # 15.4章最长公共子序列演示程序
     │   └── optimal_binary_search_tree_demo.cpp # 15.5章最优二叉搜索树演示程序
     ├── chapter18/
@@ -516,6 +518,33 @@ r_n = max(p_i + r_{n-i}) for i = 1 to n
 - **边界处理**: 正确处理长度超出价格表的情况
 - **验证功能**: 自动验证切割方案的正确性
 
+#### 15.2节 矩阵链乘法
+- **问题描述**: 给定n个矩阵的链<A1, A2, ..., An>，矩阵Ai的维度为p_{i-1}×p_i，求完全括号化方案使得标量乘法次数最少
+- **最优子结构**: 问题具有最优子结构性质，最优解包含子问题的最优解
+- **重叠子问题**: 存在大量重复计算的子问题
+
+#### 核心功能
+- **动态规划解法**: 使用二维DP表存储子问题的最优解
+- **备忘录版本**: 自顶向下的递归解法，避免重复计算
+- **最优括号化**: 返回具体的括号化方案
+- **DP表分析**: 提供完整的DP表打印和分析功能
+
+#### 算法实现
+- **递推关系**:
+  ```
+  m[i,j] = min(m[i,k] + m[k+1,j] + p_{i-1} * p_k * p_j) for k = i to j-1
+  ```
+- **DP表构建**: 按链长度递增的顺序填充DP表
+- **分割位置记录**: 记录每个子问题的最优分割位置
+- **括号化重构**: 根据分割位置表递归构建括号化方案
+
+#### 实现特性
+- **两种版本**: 完整实现动态规划和备忘录两种解法
+- **结果验证**: 自动验证两种版本结果的一致性
+- **边界处理**: 完善的异常处理和边界情况处理
+- **经典示例**: 实现算法导论图15.3的经典示例
+- **性能分析**: 时间复杂度O(n³)，空间复杂度O(n²)
+
 #### 15.4节 最长公共子序列
 - **问题描述**: 给定两个序列X和Y，求它们的最长公共子序列（LCS）
 - **动态规划解法**: 使用二维DP表存储子问题解
@@ -962,6 +991,9 @@ make -j$(nproc)
 
 # 顺序统计树演示
 ./build/bin/order_statistic_tree_demo
+
+# 矩阵链乘法演示
+./build/bin/matrix_chain_multiplication_demo
 
 # 最大流演示
 ./build/bin/max_flow_demo
