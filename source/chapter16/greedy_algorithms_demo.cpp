@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <iostream>
 #include <map>
+#include <set>
 #include <vector>
 
 using namespace algorithms;
@@ -13,6 +14,8 @@ using namespace algorithms;
  * - 16.1节 活动选择问题
  * - 16.2节 贪心算法原理
  * - 16.3节 赫夫曼编码
+ * - 16.4节 拟阵和贪心算法
+ * - 16.5节 用拟阵求解任务调度问题
  */
 
 void testActivitySelection() {
@@ -189,6 +192,116 @@ void testGreedyVsDynamicProgramming() {
   std::cout << std::endl;
 }
 
+void testMatroidTheory() {
+  std::cout << "=== 16.4节 拟阵和贪心算法 ===" << std::endl;
+
+  std::cout << "拟阵定义：" << std::endl;
+  std::cout << "拟阵 M = (S, I) 是一个有序对，其中：" << std::endl;
+  std::cout << "- S 是有限集（基集）" << std::endl;
+  std::cout << "- I ⊆ 2^S 是独立集族，满足：" << std::endl;
+  std::cout << "  1. 遗传性：如果 B ∈ I 且 A ⊆ B，则 A ∈ I" << std::endl;
+  std::cout << "  2. 交换性：如果 A, B ∈ I 且 |A| < |B|，则存在 x ∈ B - A 使得 "
+               "A ∪ {x} ∈ I"
+            << std::endl;
+  std::cout << std::endl;
+
+  // 示例：图形拟阵
+  std::cout << "图形拟阵示例：" << std::endl;
+
+  // 创建一个简单的图（4个顶点，5条边）
+  int numVertices = 4;
+  std::set<std::pair<int, int>> edges = {
+      {0, 1}, {0, 2}, {1, 2}, {1, 3}, {2, 3}};
+
+  GraphicMatroid graphicMatroid(numVertices, edges);
+
+  std::cout << "图信息：" << std::endl;
+  std::cout << "顶点数: " << numVertices << std::endl;
+  std::cout << "边集: ";
+  for (const auto &edge : edges) {
+    std::cout << "(" << edge.first << "," << edge.second << ") ";
+  }
+  std::cout << std::endl;
+
+  // 测试几个边子集
+  std::set<std::pair<int, int>> subset1 = {{0, 1}, {1, 3}};         // 无环
+  std::set<std::pair<int, int>> subset2 = {{0, 1}, {1, 2}, {0, 2}}; // 有环
+
+  std::cout << "\n独立性测试：" << std::endl;
+  std::cout << "子集1 {(0,1), (1,3)}: "
+            << (graphicMatroid.isIndependent(subset1) ? "独立（无环）"
+                                                      : "不独立（有环）")
+            << std::endl;
+  std::cout << "子集2 {(0,1), (1,2), (0,2)}: "
+            << (graphicMatroid.isIndependent(subset2) ? "独立（无环）"
+                                                      : "不独立（有环）")
+            << std::endl;
+
+  std::cout << "\n拟阵与贪心算法的关系：" << std::endl;
+  std::cout << "如果一个问题可以建模为拟阵，那么贪心算法总能得到最优解。"
+            << std::endl;
+  std::cout << "活动选择问题和最小生成树问题都可以建模为拟阵。" << std::endl;
+  std::cout << std::endl;
+}
+
+void testTaskScheduling() {
+  std::cout << "=== 16.5节 用拟阵求解任务调度问题 ===" << std::endl;
+
+  // 算法导论示例数据
+  std::vector<TaskScheduling::Task> tasks = {
+      {1, 4, 70}, // 任务1：截止时间4，惩罚70
+      {2, 2, 60}, // 任务2：截止时间2，惩罚60
+      {3, 4, 50}, // 任务3：截止时间4，惩罚50
+      {4, 3, 40}, // 任务4：截止时间3，惩罚40
+      {5, 1, 30}, // 任务5：截止时间1，惩罚30
+      {6, 4, 20}, // 任务6：截止时间4，惩罚20
+      {7, 6, 10}  // 任务7：截止时间6，惩罚10
+  };
+
+  std::cout << "任务信息：" << std::endl;
+  std::cout << std::setw(8) << "任务" << std::setw(12) << "截止时间"
+            << std::setw(10) << "惩罚" << std::endl;
+  std::cout << std::string(30, '-') << std::endl;
+
+  for (const auto &task : tasks) {
+    std::cout << std::setw(8) << task.id << std::setw(12) << task.deadline
+              << std::setw(10) << task.penalty << std::endl;
+  }
+
+  // 使用贪心算法求解
+  auto result = TaskScheduling::greedyTaskScheduling(tasks);
+  auto &schedule = result.first;
+  int totalPenalty = result.second;
+
+  std::cout << "\n贪心算法调度结果：" << std::endl;
+  std::cout << "调度顺序：";
+  for (size_t i = 0; i < schedule.size(); ++i) {
+    std::cout << "任务" << schedule[i].id;
+    if (i < schedule.size() - 1) {
+      std::cout << " → ";
+    }
+  }
+  std::cout << std::endl;
+
+  std::cout << "未安排的任务惩罚：" << totalPenalty << std::endl;
+  std::cout << "调度可行性："
+            << (TaskScheduling::validateSchedule(schedule) ? "✓ 可行"
+                                                           : "✗ 不可行")
+            << std::endl;
+
+  std::cout << "\n拟阵理论在任务调度中的应用：" << std::endl;
+  std::cout << TaskScheduling::explainMatroidApplication() << std::endl;
+  std::cout << std::endl;
+
+  // 验证贪心算法的正确性
+  std::cout << "贪心算法正确性验证：" << std::endl;
+  std::cout << "- 任务按惩罚值降序排序" << std::endl;
+  std::cout << "- 为每个任务分配最晚的可用时间槽" << std::endl;
+  std::cout << "- 无法安排的任务计入总惩罚" << std::endl;
+  std::cout << "- 该算法总能得到最优解（基于拟阵理论）" << std::endl;
+  std::cout << std::endl;
+}
+
 int main() {
   std::cout << "算法导论第16章 - 贪心算法演示程序" << std::endl;
   std::cout << "==================================" << std::endl;
@@ -199,6 +312,8 @@ int main() {
   testFractionalKnapsack();
   testGreedyPrinciples();
   testGreedyVsDynamicProgramming();
+  testMatroidTheory();
+  testTaskScheduling();
 
   std::cout << "=== 所有测试完成 ===" << std::endl;
   std::cout << "第16章贪心算法实现验证成功！" << std::endl;

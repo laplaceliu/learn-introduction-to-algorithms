@@ -2,9 +2,11 @@
 #define GREEDY_ALGORITHMS_H
 
 #include <algorithm>
+#include <functional>
 #include <iostream>
 #include <map>
 #include <queue>
+#include <set>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -18,6 +20,8 @@ namespace algorithms {
  * - 16.1节 活动选择问题
  * - 16.2节 贪心算法原理
  * - 16.3节 赫夫曼编码
+ * - 16.4节 拟阵和贪心算法
+ * - 16.5节 用拟阵求解任务调度问题
  */
 
 /**
@@ -325,6 +329,252 @@ public:
     deleteTree(root);
     root = nullptr;
     codes.clear();
+  }
+};
+
+/**
+ * @brief 拟阵定义 - 16.4节
+ *
+ * 拟阵是一个有序对 M = (S, I)，其中：
+ * - S 是一个有限集
+ * - I 是 S 的子集族，满足以下条件：
+ *   1. 遗传性：如果 B ∈ I 且 A ⊆ B，则 A ∈ I
+ *   2. 交换性：如果 A, B ∈ I 且 |A| < |B|，则存在 x ∈ B - A 使得 A ∪ {x} ∈ I
+ */
+template <typename T> class Matroid {
+private:
+  std::set<T> groundSet;
+  std::function<bool(const std::set<T> &)> independenceOracle;
+
+public:
+  /**
+   * @brief 构造函数
+   * @param set 拟阵的基集
+   * @param oracle 独立性判断函数
+   */
+  Matroid(const std::set<T> &set,
+          std::function<bool(const std::set<T> &)> oracle)
+      : groundSet(set), independenceOracle(oracle) {}
+
+  /**
+   * @brief 判断子集是否独立
+   * @param subset 要判断的子集
+   * @return 如果子集独立返回true，否则返回false
+   */
+  bool isIndependent(const std::set<T> &subset) const {
+    return independenceOracle(subset);
+  }
+
+  /**
+   * @brief 获取基集
+   * @return 拟阵的基集
+   */
+  std::set<T> getGroundSet() const { return groundSet; }
+
+  /**
+   * @brief 贪心算法求解拟阵上的最大权重独立集
+   * @param weightFunction 权重函数
+   * @return 最大权重独立集
+   */
+  std::set<T> greedyMaxWeightIndependentSet(
+      std::function<double(const T &)> weightFunction) const {
+    // 按权重降序排序基集中的元素
+    std::vector<T> sortedElements(groundSet.begin(), groundSet.end());
+    std::sort(sortedElements.begin(), sortedElements.end(),
+              [&](const T &a, const T &b) {
+                return weightFunction(a) > weightFunction(b);
+              });
+
+    std::set<T> result;
+
+    // 贪心选择：按权重从高到低，如果加入后仍然独立，则加入
+    for (const T &element : sortedElements) {
+      std::set<T> candidate = result;
+      candidate.insert(element);
+
+      if (isIndependent(candidate)) {
+        result = candidate;
+      }
+    }
+
+    return result;
+  }
+};
+
+/**
+ * @brief 图形拟阵（Graphic Matroid）
+ *
+ * 图形拟阵的基集是图的边集，独立集是无环边集（森林）
+ */
+class GraphicMatroid {
+private:
+  int numVertices;
+  std::set<std::pair<int, int>> edges;
+
+  /**
+   * @brief 判断边集是否形成环
+   * @param edgeSet 边集
+   * @return 如果无环返回true，否则返回false
+   */
+  bool isAcyclic(const std::set<std::pair<int, int>> &edgeSet) const {
+    // 使用并查集检测环
+    std::vector<int> parent(numVertices);
+    for (int i = 0; i < numVertices; ++i) {
+      parent[i] = i;
+    }
+
+    auto find = [&](int x) {
+      while (parent[x] != x) {
+        parent[x] = parent[parent[x]];
+        x = parent[x];
+      }
+      return x;
+    };
+
+    for (const auto &edge : edgeSet) {
+      int u = edge.first, v = edge.second;
+      int rootU = find(u), rootV = find(v);
+
+      if (rootU == rootV) {
+        return false; // 形成环
+      }
+
+      parent[rootU] = rootV; // 合并
+    }
+
+    return true;
+  }
+
+public:
+  /**
+   * @brief 构造函数
+   * @param vertices 顶点数量
+   * @param edgeSet 边集
+   */
+  GraphicMatroid(int vertices, const std::set<std::pair<int, int>> &edgeSet)
+      : numVertices(vertices), edges(edgeSet) {}
+
+  /**
+   * @brief 判断边子集是否独立（无环）
+   * @param subset 边子集
+   * @return 如果无环返回true，否则返回false
+   */
+  bool isIndependent(const std::set<std::pair<int, int>> &subset) const {
+    return isAcyclic(subset);
+  }
+
+  /**
+   * @brief 获取边集
+   * @return 图的边集
+   */
+  std::set<std::pair<int, int>> getEdges() const { return edges; }
+
+  /**
+   * @brief 获取顶点数量
+   * @return 顶点数量
+   */
+  int getNumVertices() const { return numVertices; }
+};
+
+/**
+ * @brief 任务调度问题 - 16.5节
+ *
+ * 单机任务调度问题：每个任务有截止时间和惩罚，
+ * 目标是安排任务顺序使得总惩罚最小
+ */
+class TaskScheduling {
+public:
+  /**
+   * @brief 任务结构体
+   */
+  struct Task {
+    int id;             // 任务编号
+    int deadline;       // 截止时间
+    int penalty;        // 惩罚值
+    int processingTime; // 处理时间（默认为1）
+
+    Task(int i, int d, int p, int pt = 1)
+        : id(i), deadline(d), penalty(p), processingTime(pt) {}
+
+    // 用于排序的比较函数（按惩罚降序）
+    bool operator<(const Task &other) const { return penalty > other.penalty; }
+  };
+
+  /**
+   * @brief 贪心算法求解任务调度问题
+   * @param tasks 任务列表
+   * @return 调度顺序和总惩罚
+   */
+  static std::pair<std::vector<Task>, int>
+  greedyTaskScheduling(std::vector<Task> tasks) {
+    // 按惩罚值降序排序
+    std::sort(tasks.begin(), tasks.end());
+
+    int n = tasks.size();
+    std::vector<bool> timeSlot(n + 1, false); // 时间槽占用情况
+    std::vector<Task> schedule;
+    int totalPenalty = 0;
+
+    // 为每个任务分配时间槽
+    for (const Task &task : tasks) {
+      // 找到最晚的可用时间槽（不超过截止时间）
+      int slot = std::min(task.deadline, n);
+      while (slot > 0 && timeSlot[slot]) {
+        slot--;
+      }
+
+      if (slot > 0) {
+        // 成功安排任务
+        timeSlot[slot] = true;
+        schedule.push_back(task);
+      } else {
+        // 无法安排，计入惩罚
+        totalPenalty += task.penalty;
+      }
+    }
+
+    // 按时间槽顺序重新排列已安排的任务
+    std::vector<Task> finalSchedule;
+    for (int i = 1; i <= n; ++i) {
+      if (timeSlot[i]) {
+        for (const Task &task : schedule) {
+          if (task.deadline >= i) {
+            finalSchedule.push_back(task);
+            break;
+          }
+        }
+      }
+    }
+
+    return {finalSchedule, totalPenalty};
+  }
+
+  /**
+   * @brief 验证调度是否可行
+   * @param schedule 调度顺序
+   * @return 如果可行返回true，否则返回false
+   */
+  static bool validateSchedule(const std::vector<Task> &schedule) {
+    int currentTime = 0;
+    for (const Task &task : schedule) {
+      currentTime += task.processingTime;
+      if (currentTime > task.deadline) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * @brief 计算拟阵在任务调度问题中的应用
+   * @return 拟阵理论的说明
+   */
+  static std::string explainMatroidApplication() {
+    return "任务调度问题可以建模为拟阵上的优化问题："
+           "- 基集：所有任务"
+           "- 独立集：可以在截止时间前完成的任务子集"
+           "- 权重：任务的惩罚值（负权重）"
+           "- 贪心算法：按惩罚值降序选择任务，保证最优解";
   }
 };
 
