@@ -17,6 +17,7 @@ learn-introduction-to-algorithms/
 ├── build.sh                # 构建脚本
 ├── README.md               # 项目说明文档
 ├── include/                 # 扁平结构头文件目录
+│   ├── algorithm_basics.h  # 2章算法基础
 │   ├── divide_and_conquer.h # 4章分治策略
 │   ├── heap.h              # 6.1节堆数据结构
 │   ├── priority_queue.h    # 6.4节优先队列
@@ -47,6 +48,8 @@ learn-introduction-to-algorithms/
 ├── max_flow.h         # 26章最大流
 └── string_matching.h    # 32章字符串匹配
 └── source/                 # 章节结构源文件目录
+    ├── chapter02/
+    │   └── algorithm_basics_demo.cpp # 2章算法基础演示程序
     ├── chapter04/
     │   └── divide_and_conquer_demo.cpp # 4章分治策略演示程序
     ├── chapter6/
