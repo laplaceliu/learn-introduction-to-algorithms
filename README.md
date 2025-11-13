@@ -27,6 +27,7 @@ learn-introduction-to-algorithms/
 │   ├── hash_table.h        # 11章散列表
 │   ├── binary_search_tree.h # 12章二叉搜索树
 │   ├── red_black_tree.h    # 13章红黑树
+│   ├── order_statistic_tree.h # 14.1章动态顺序统计
 │   ├── interval_tree.h     # 14章区间树
 │   ├── rod_cutting.h      # 15章钢条切割
 │   ├── longest_common_subsequence.h # 15.4章最长公共子序列
@@ -58,6 +59,7 @@ learn-introduction-to-algorithms/
     ├── chapter13/
     │   └── red_black_tree_demo.cpp    # 13章红黑树演示程序
     ├── chapter14/
+    │   ├── order_statistic_tree_demo.cpp # 14.1章动态顺序统计演示程序
     │   └── interval_tree_demo.cpp     # 14章区间树演示程序
     ├── chapter15/
     │   ├── rod_cutting_demo.cpp       # 15章钢条切割演示程序
@@ -432,7 +434,39 @@ learn-introduction-to-algorithms/
 - **平衡性保证**: 最坏情况下O(log n)的操作复杂度
 - **完整验证**: 红黑树五条性质的自动验证
 
-### 第14章 区间树
+### 第14章 数据结构的扩张
+
+#### 14.1节 动态顺序统计
+- **扩展红黑树**: 基于红黑树的顺序统计数据结构扩展
+- **节点大小维护**: 每个节点维护以该节点为根的子树的大小
+- **核心操作**:
+  - `OS-SELECT(i)`: 选择第i小的元素
+  - `OS-RANK(x)`: 获取元素x的排名
+- **时间复杂度**: 两种操作的时间复杂度均为O(log n)
+
+#### 核心功能
+- **动态维护**: 在插入、删除、旋转操作中自动更新size信息
+- **一致性保证**: OS-SELECT和OS-RANK操作数学上一致
+- **红黑树兼容**: 保持原有红黑树的所有性质和操作
+- **模板支持**: 支持任意可比较数据类型
+
+#### 算法实现
+- **OS-SELECT算法**: 递归选择第i小的元素
+  - 计算当前节点的排名r
+  - 如果i = r，返回当前节点
+  - 如果i < r，在左子树中递归选择第i小的元素
+  - 如果i > r，在右子树中递归选择第i-r小的元素
+- **OS-RANK算法**: 计算元素在有序序列中的排名
+  - 计算左子树大小得到当前节点的局部排名
+  - 向上遍历到根节点，累加路径上的排名贡献
+- **size维护**: 在旋转、插入、删除操作中正确更新子树大小
+
+#### 实现特性
+- **复用现有实现**: 基于第13章的红黑树实现进行扩展
+- **完整验证**: 自动验证顺序统计操作的正确性和一致性
+- **边界处理**: 完善的异常处理和边界情况处理
+- **性能保证**: 在最坏情况下保持O(log n)的时间复杂度
+- **经典示例**: 实现算法导论图14.1的经典示例
 
 #### 14.3节 区间树
 - **扩展红黑树**: 基于红黑树的区间数据结构扩展
@@ -925,6 +959,9 @@ make -j$(nproc)
 
 # 散列表演示
 ./build/bin/hash_table_demo
+
+# 顺序统计树演示
+./build/bin/order_statistic_tree_demo
 
 # 最大流演示
 ./build/bin/max_flow_demo
