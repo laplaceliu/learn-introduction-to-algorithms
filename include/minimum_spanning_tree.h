@@ -1,6 +1,7 @@
 #ifndef MINIMUM_SPANNING_TREE_H
 #define MINIMUM_SPANNING_TREE_H
 
+#include "disjoint_set.h"
 #include "graph_representation.h"
 #include <algorithm>
 #include <climits>
@@ -12,50 +13,6 @@
 #include <vector>
 
 namespace algorithms {
-
-// 并查集数据结构（用于Kruskal算法）
-class DisjointSet {
-private:
-  std::vector<int> parent;
-  std::vector<int> rank;
-
-public:
-  DisjointSet(int size) {
-    parent.resize(size);
-    rank.resize(size, 0);
-    for (int i = 0; i < size; i++) {
-      parent[i] = i;
-    }
-  }
-
-  // 查找根节点（带路径压缩）
-  int find(int x) {
-    if (parent[x] != x) {
-      parent[x] = find(parent[x]); // 路径压缩
-    }
-    return parent[x];
-  }
-
-  // 合并两个集合（按秩合并）
-  void union_sets(int x, int y) {
-    int rootX = find(x);
-    int rootY = find(y);
-
-    if (rootX != rootY) {
-      if (rank[rootX] < rank[rootY]) {
-        parent[rootX] = rootY;
-      } else if (rank[rootX] > rank[rootY]) {
-        parent[rootY] = rootX;
-      } else {
-        parent[rootY] = rootX;
-        rank[rootX]++;
-      }
-    }
-  }
-
-  // 检查两个元素是否在同一集合中
-  bool is_same_set(int x, int y) { return find(x) == find(y); }
-};
 
 // 最小生成树类
 class MinimumSpanningTree {
