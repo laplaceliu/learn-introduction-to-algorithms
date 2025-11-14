@@ -49,8 +49,8 @@ public:
   }
 
   // 获取行数和列数
-  int getRows() const { return rows; }
-  int getCols() const { return cols; }
+  int get_rows() const { return rows; }
+  int get_cols() const { return cols; }
 
   /**
    * @brief 矩阵加法
@@ -196,7 +196,7 @@ public:
    *
    * @return bool 是否对称
    */
-  bool isSymmetric() const {
+  bool is_symmetric() const {
     if (rows != cols)
       return false;
 
@@ -221,12 +221,12 @@ public:
    * @return double 迹
    */
   static double trace(const Matrix &mat) {
-    if (mat.getRows() != mat.getCols())
+    if (mat.get_rows() != mat.get_cols())
       throw std::invalid_argument(
           "Matrix must be square for trace calculation");
 
     double result = 0.0;
-    for (int i = 0; i < mat.getRows(); i++) {
+    for (int i = 0; i < mat.get_rows(); i++) {
       result += mat(i, i);
     }
     return result;
@@ -241,11 +241,11 @@ public:
    * @return double 行列式
    */
   static double determinant(const Matrix &mat) {
-    if (mat.getRows() != mat.getCols())
+    if (mat.get_rows() != mat.get_cols())
       throw std::invalid_argument(
           "Matrix must be square for determinant calculation");
 
-    int n = mat.getRows();
+    int n = mat.get_rows();
 
     // 基础情况
     if (n == 1)
@@ -281,8 +281,8 @@ public:
    */
   static double norm(const Matrix &mat) {
     double result = 0.0;
-    for (int i = 0; i < mat.getRows(); i++)
-      for (int j = 0; j < mat.getCols(); j++)
+    for (int i = 0; i < mat.get_rows(); i++)
+      for (int j = 0; j < mat.get_cols(); j++)
         result += mat(i, j) * mat(i, j);
     return std::sqrt(result);
   }

@@ -23,9 +23,9 @@ public:
    * @param A 输入矩阵
    * @return Matrix 逆矩阵
    */
-  static Matrix gaussJordanInversion(const Matrix &A) {
-    int n = A.getRows();
-    if (n != A.getCols())
+  static Matrix gauss_jordan_inversion(const Matrix &A) {
+    int n = A.get_rows();
+    if (n != A.get_cols())
       throw std::invalid_argument("Matrix must be square for inversion");
 
     // 创建增广矩阵 [A | I]
@@ -40,17 +40,17 @@ public:
     // 高斯-约当消元
     for (int i = 0; i < n; i++) {
       // 寻找主元
-      int maxRow = i;
+      int max_row = i;
       for (int k = i + 1; k < n; k++) {
-        if (std::abs(aug(k, i)) > std::abs(aug(maxRow, i))) {
-          maxRow = k;
+        if (std::abs(aug(k, i)) > std::abs(aug(max_row, i))) {
+          max_row = k;
         }
       }
 
       // 交换行
-      if (maxRow != i) {
+      if (max_row != i) {
         for (int j = 0; j < 2 * n; j++) {
-          std::swap(aug(i, j), aug(maxRow, j));
+          std::swap(aug(i, j), aug(max_row, j));
         }
       }
 
@@ -95,9 +95,9 @@ public:
    * @param A 输入矩阵
    * @return Matrix 逆矩阵
    */
-  static Matrix luInversion(const Matrix &A) {
-    int n = A.getRows();
-    if (n != A.getCols())
+  static Matrix lu_inversion(const Matrix &A) {
+    int n = A.get_rows();
+    if (n != A.get_cols())
       throw std::invalid_argument("Matrix must be square for inversion");
 
     // 对每个单位向量求解线性方程组
@@ -109,7 +109,7 @@ public:
       b[j] = 1.0;
 
       // 使用LU分解求解
-      std::vector<double> x = LinearSystemSolver::luDecomposition(A, b);
+      std::vector<double> x = LinearSystemSolver::lu_decomposition(A, b);
 
       // 将解存入逆矩阵的第j列
       for (int i = 0; i < n; i++) {
@@ -128,9 +128,9 @@ public:
    * @param A 输入矩阵
    * @return Matrix 逆矩阵
    */
-  static Matrix adjugateInversion(const Matrix &A) {
-    int n = A.getRows();
-    if (n != A.getCols())
+  static Matrix adjugate_inversion(const Matrix &A) {
+    int n = A.get_rows();
+    if (n != A.get_cols())
       throw std::invalid_argument("Matrix must be square for inversion");
 
     // 计算行列式
@@ -179,8 +179,8 @@ public:
    * @param A 矩阵
    * @return bool 是否可逆
    */
-  static bool isInvertible(const Matrix &A) {
-    if (A.getRows() != A.getCols())
+  static bool is_invertible(const Matrix &A) {
+    if (A.get_rows() != A.get_cols())
       return false;
 
     try {
@@ -199,9 +199,9 @@ public:
    * @param tolerance 容差
    * @return bool 是否正确
    */
-  static bool verifyInversion(const Matrix &A, const Matrix &A_inv,
+  static bool verify_inversion(const Matrix &A, const Matrix &A_inv,
                               double tolerance = 1e-6) {
-    int n = A.getRows();
+    int n = A.get_rows();
 
     // 检查 A * A_inv ≈ I
     Matrix product = A * A_inv;
@@ -236,12 +236,12 @@ public:
    * @param A 矩阵
    * @return double 条件数
    */
-  static double conditionNumber(const Matrix &A) {
-    if (!isInvertible(A)) {
+  static double condition_number(const Matrix &A) {
+    if (!is_invertible(A)) {
       throw std::runtime_error("Matrix is not invertible");
     }
 
-    Matrix A_inv = gaussJordanInversion(A);
+    Matrix A_inv = gauss_jordan_inversion(A);
     double norm_A = MatrixUtils::norm(A);
     double norm_A_inv = MatrixUtils::norm(A_inv);
 

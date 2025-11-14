@@ -26,13 +26,13 @@ private:
    * @param high 结束索引
    * @return 分区后基准元素的最终位置
    */
-  static int randomizedPartition(std::vector<int> &arr, int low, int high) {
+  static int randomized_partition(std::vector<int> &arr, int low, int high) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(low, high);
 
-    int randomIndex = dis(gen);
-    std::swap(arr[randomIndex], arr[high]);
+    int random_index = dis(gen);
+    std::swap(arr[random_index], arr[high]);
 
     return partition(arr, low, high);
   }
@@ -65,7 +65,7 @@ private:
    * @param low 起始索引
    * @param high 结束索引
    */
-  static void insertionSort(std::vector<int> &arr, int low, int high) {
+  static void insertion_sort(std::vector<int> &arr, int low, int high) {
     for (int i = low + 1; i <= high; ++i) {
       int key = arr[i];
       int j = i - 1;
@@ -86,12 +86,12 @@ private:
    * @param high 结束索引
    * @return 中位数的中位数
    */
-  static int medianOfMedians(std::vector<int> &arr, int low, int high) {
+  static int median_of_medians(std::vector<int> &arr, int low, int high) {
     int n = high - low + 1;
 
     // 如果元素数量小于等于5，直接排序返回中位数
     if (n <= 5) {
-      insertionSort(arr, low, high);
+      insertion_sort(arr, low, high);
       return arr[low + (n - 1) / 2];
     }
 
@@ -99,7 +99,7 @@ private:
     std::vector<int> medians;
     for (int i = low; i <= high; i += 5) {
       int end = std::min(i + 4, high);
-      insertionSort(arr, i, end);
+      insertion_sort(arr, i, end);
       medians.push_back(arr[i + (end - i) / 2]);
     }
 
@@ -113,26 +113,26 @@ public:
    * @param arr 数组
    * @return 包含最小值和最大值的pair
    */
-  static std::pair<int, int> findMinMax(const std::vector<int> &arr) {
+  static std::pair<int, int> find_min_max(const std::vector<int> &arr) {
     if (arr.empty()) {
       throw std::invalid_argument("数组不能为空");
     }
 
     int n = arr.size();
-    int minVal, maxVal;
+    int min_val, max_val;
     int start;
 
     // 初始化最小值和最大值
     if (n % 2 == 1) {
-      minVal = maxVal = arr[0];
+      min_val = max_val = arr[0];
       start = 1;
     } else {
       if (arr[0] < arr[1]) {
-        minVal = arr[0];
-        maxVal = arr[1];
+        min_val = arr[0];
+        max_val = arr[1];
       } else {
-        minVal = arr[1];
-        maxVal = arr[0];
+        min_val = arr[1];
+        max_val = arr[0];
       }
       start = 2;
     }
@@ -140,15 +140,15 @@ public:
     // 每次比较两个元素，总共3(n/2)次比较
     for (int i = start; i < n; i += 2) {
       if (arr[i] < arr[i + 1]) {
-        minVal = std::min(minVal, arr[i]);
-        maxVal = std::max(maxVal, arr[i + 1]);
+        min_val = std::min(min_val, arr[i]);
+        max_val = std::max(max_val, arr[i + 1]);
       } else {
-        minVal = std::min(minVal, arr[i + 1]);
-        maxVal = std::max(maxVal, arr[i]);
+        min_val = std::min(min_val, arr[i + 1]);
+        max_val = std::max(max_val, arr[i]);
       }
     }
 
-    return {minVal, maxVal};
+    return {min_val, max_val};
   }
 
   /**
@@ -159,20 +159,20 @@ public:
    * @param i 要查找的第i小的元素（从0开始）
    * @return 第i小的元素
    */
-  static int randomizedSelect(std::vector<int> &arr, int low, int high, int i) {
+  static int randomized_select(std::vector<int> &arr, int low, int high, int i) {
     if (low == high) {
       return arr[low];
     }
 
-    int q = randomizedPartition(arr, low, high);
+    int q = randomized_partition(arr, low, high);
     int k = q - low;
 
     if (i == k) {
       return arr[q];
     } else if (i < k) {
-      return randomizedSelect(arr, low, q - 1, i);
+      return randomized_select(arr, low, q - 1, i);
     } else {
-      return randomizedSelect(arr, q + 1, high, i - k - 1);
+      return randomized_select(arr, q + 1, high, i - k - 1);
     }
   }
 
@@ -186,24 +186,24 @@ public:
    */
   static int select(std::vector<int> &arr, int low, int high, int i) {
     if (high - low + 1 <= 5) {
-      insertionSort(arr, low, high);
+      insertion_sort(arr, low, high);
       return arr[low + i];
     }
 
     // 找到中位数的中位数作为基准
-    int median = medianOfMedians(arr, low, high);
+    int median = median_of_medians(arr, low, high);
 
     // 找到中位数在数组中的位置
-    int medianIndex = low;
+    int median_index = low;
     for (int j = low; j <= high; ++j) {
       if (arr[j] == median) {
-        medianIndex = j;
+        median_index = j;
         break;
       }
     }
 
     // 将中位数交换到末尾
-    std::swap(arr[medianIndex], arr[high]);
+    std::swap(arr[median_index], arr[high]);
 
     // 分区
     int q = partition(arr, low, high);
@@ -223,7 +223,7 @@ public:
    * @param arr 数组
    * @return 中位数
    */
-  static double findMedian(std::vector<int> &arr) {
+  static double find_median(std::vector<int> &arr) {
     if (arr.empty()) {
       throw std::invalid_argument("数组不能为空");
     }
@@ -247,7 +247,7 @@ public:
    * @param i 要查找的第i小的元素（从1开始）
    * @return 第i小的元素
    */
-  static int findIthSmallest(std::vector<int> &arr, int i) {
+  static int find_ith_smallest(std::vector<int> &arr, int i) {
     if (arr.empty()) {
       throw std::invalid_argument("数组不能为空");
     }
@@ -265,7 +265,7 @@ public:
    * @param i 要查找的第i小的元素（从1开始）
    * @return 第i小的元素
    */
-  static int findIthSmallestRandomized(std::vector<int> &arr, int i) {
+  static int find_ith_smallest_randomized(std::vector<int> &arr, int i) {
     if (arr.empty()) {
       throw std::invalid_argument("数组不能为空");
     }
@@ -274,7 +274,7 @@ public:
       throw std::invalid_argument("i必须在1到数组大小之间");
     }
 
-    return randomizedSelect(arr, 0, arr.size() - 1, i - 1);
+    return randomized_select(arr, 0, arr.size() - 1, i - 1);
   }
 };
 

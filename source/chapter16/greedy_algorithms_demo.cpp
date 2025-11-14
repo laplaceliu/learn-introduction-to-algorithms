@@ -18,26 +18,26 @@ using namespace algorithms;
  * - 16.5节 用拟阵求解任务调度问题
  */
 
-void testActivitySelection() {
+void test_activity_selection() {
   std::cout << "=== 16.1节 活动选择问题 ===" << std::endl;
 
   ActivitySelector selector;
 
   // 添加算法导论图16.1的活动数据
-  selector.addActivity(1, 1, 4);
-  selector.addActivity(2, 3, 5);
-  selector.addActivity(3, 0, 6);
-  selector.addActivity(4, 5, 7);
-  selector.addActivity(5, 3, 9);
-  selector.addActivity(6, 5, 9);
-  selector.addActivity(7, 6, 10);
-  selector.addActivity(8, 8, 11);
-  selector.addActivity(9, 8, 12);
-  selector.addActivity(10, 2, 14);
-  selector.addActivity(11, 12, 16);
+  selector.add_activity(1, 1, 4);
+  selector.add_activity(2, 3, 5);
+  selector.add_activity(3, 0, 6);
+  selector.add_activity(4, 5, 7);
+  selector.add_activity(5, 3, 9);
+  selector.add_activity(6, 5, 9);
+  selector.add_activity(7, 6, 10);
+  selector.add_activity(8, 8, 11);
+  selector.add_activity(9, 8, 12);
+  selector.add_activity(10, 2, 14);
+  selector.add_activity(11, 12, 16);
 
   std::cout << "所有活动（按结束时间排序）：" << std::endl;
-  auto activities = selector.getActivities();
+  auto activities = selector.get_activities();
   std::sort(activities.begin(), activities.end());
 
   std::cout << std::setw(4) << "ID" << std::setw(8) << "开始" << std::setw(8)
@@ -50,7 +50,7 @@ void testActivitySelection() {
   }
 
   std::cout << "\n贪心算法选择结果（迭代版本）：" << std::endl;
-  auto selected = selector.greedyActivitySelector();
+  auto selected = selector.greedy_activity_selector();
 
   std::cout << "选择的活动ID: ";
   for (size_t i = 0; i < selected.size(); ++i) {
@@ -65,7 +65,7 @@ void testActivitySelection() {
   std::cout << std::endl;
 }
 
-void testHuffmanCoding() {
+void test_huffman_coding() {
   std::cout << "=== 16.3节 赫夫曼编码 ===" << std::endl;
 
   HuffmanCoding huffman;
@@ -90,10 +90,10 @@ void testHuffmanCoding() {
   }
 
   // 构建赫夫曼树
-  huffman.buildHuffmanTree(frequencies);
+  huffman.build_huffman_tree(frequencies);
 
   // 获取编码
-  auto codes = huffman.getCodes();
+  auto codes = huffman.get_codes();
 
   std::cout << "\n赫夫曼编码表：" << std::endl;
   std::cout << std::setw(6) << "字符" << std::setw(10) << "编码" << std::endl;
@@ -105,25 +105,25 @@ void testHuffmanCoding() {
   }
 
   // 测试编码和解码
-  std::string testText = "abacab";
-  std::string encoded = huffman.encode(testText);
+  std::string test_text = "abacab";
+  std::string encoded = huffman.encode(test_text);
   std::string decoded = huffman.decode(encoded);
 
   std::cout << "\n编码测试：" << std::endl;
-  std::cout << "原始文本: " << testText << std::endl;
+  std::cout << "原始文本: " << test_text << std::endl;
   std::cout << "编码结果: " << encoded << std::endl;
   std::cout << "解码结果: " << decoded << std::endl;
-  std::cout << "编码正确性: " << (testText == decoded ? "✓ 正确" : "✗ 错误")
+  std::cout << "编码正确性: " << (test_text == decoded ? "✓ 正确" : "✗ 错误")
             << std::endl;
 
   // 计算压缩率
-  double ratio = huffman.getCompressionRatio(testText);
+  double ratio = huffman.get_compression_ratio(test_text);
   std::cout << "压缩率: " << std::fixed << std::setprecision(2) << ratio * 100
             << "%" << std::endl;
   std::cout << std::endl;
 }
 
-void testFractionalKnapsack() {
+void test_fractional_knapsack() {
   std::cout << "=== 16.2节 分数背包问题 ===" << std::endl;
 
   // 算法导论示例数据
@@ -138,30 +138,30 @@ void testFractionalKnapsack() {
   std::cout << std::string(36, '-') << std::endl;
 
   for (size_t i = 0; i < values.size(); ++i) {
-    double unitValue = values[i] / weights[i];
+    double unit_value = values[i] / weights[i];
     std::cout << std::setw(8) << i + 1 << std::setw(8) << values[i]
               << std::setw(8) << weights[i] << std::setw(12) << std::fixed
-              << std::setprecision(2) << unitValue << std::endl;
+              << std::setprecision(2) << unit_value << std::endl;
   }
 
-  double maxValue =
-      GreedyPrinciples::fractionalKnapsack(values, weights, capacity);
+  double max_value =
+      GreedyPrinciples::fractional_knapsack(values, weights, capacity);
 
   std::cout << "\n贪心算法求解结果：" << std::endl;
-  std::cout << "最大总价值: " << std::fixed << std::setprecision(2) << maxValue
+  std::cout << "最大总价值: " << std::fixed << std::setprecision(2) << max_value
             << std::endl;
   std::cout << std::endl;
 }
 
-void testGreedyPrinciples() {
+void test_greedy_principles() {
   std::cout << "=== 16.2节 贪心算法原理 ===" << std::endl;
 
   std::cout << "贪心选择性质：" << std::endl;
-  std::cout << GreedyPrinciples::explainGreedyChoiceProperty() << std::endl;
+  std::cout << GreedyPrinciples::explain_greedy_choice_property() << std::endl;
   std::cout << std::endl;
 
   std::cout << "最优子结构性质：" << std::endl;
-  std::cout << GreedyPrinciples::explainOptimalSubstructure() << std::endl;
+  std::cout << GreedyPrinciples::explain_optimal_substructure() << std::endl;
   std::cout << std::endl;
 
   std::cout << "贪心算法适用条件：" << std::endl;
@@ -171,7 +171,7 @@ void testGreedyPrinciples() {
   std::cout << std::endl;
 }
 
-void testGreedyVsDynamicProgramming() {
+void test_greedy_vs_dynamic_programming() {
   std::cout << "=== 贪心算法 vs 动态规划 ===" << std::endl;
 
   std::cout << "贪心算法的特点：" << std::endl;
@@ -192,7 +192,7 @@ void testGreedyVsDynamicProgramming() {
   std::cout << std::endl;
 }
 
-void testMatroidTheory() {
+void test_matroid_theory() {
   std::cout << "=== 16.4节 拟阵和贪心算法 ===" << std::endl;
 
   std::cout << "拟阵定义：" << std::endl;
@@ -209,14 +209,14 @@ void testMatroidTheory() {
   std::cout << "图形拟阵示例：" << std::endl;
 
   // 创建一个简单的图（4个顶点，5条边）
-  int numVertices = 4;
+  int num_vertices = 4;
   std::set<std::pair<int, int>> edges = {
       {0, 1}, {0, 2}, {1, 2}, {1, 3}, {2, 3}};
 
-  GraphicMatroid graphicMatroid(numVertices, edges);
+  GraphicMatroid graphic_matroid(num_vertices, edges);
 
   std::cout << "图信息：" << std::endl;
-  std::cout << "顶点数: " << numVertices << std::endl;
+  std::cout << "顶点数: " << num_vertices << std::endl;
   std::cout << "边集: ";
   for (const auto &edge : edges) {
     std::cout << "(" << edge.first << "," << edge.second << ") ";
@@ -229,11 +229,11 @@ void testMatroidTheory() {
 
   std::cout << "\n独立性测试：" << std::endl;
   std::cout << "子集1 {(0,1), (1,3)}: "
-            << (graphicMatroid.isIndependent(subset1) ? "独立（无环）"
+            << (graphic_matroid.is_independent(subset1) ? "独立（无环）"
                                                       : "不独立（有环）")
             << std::endl;
   std::cout << "子集2 {(0,1), (1,2), (0,2)}: "
-            << (graphicMatroid.isIndependent(subset2) ? "独立（无环）"
+            << (graphic_matroid.is_independent(subset2) ? "独立（无环）"
                                                       : "不独立（有环）")
             << std::endl;
 
@@ -244,7 +244,7 @@ void testMatroidTheory() {
   std::cout << std::endl;
 }
 
-void testTaskScheduling() {
+void test_task_scheduling() {
   std::cout << "=== 16.5节 用拟阵求解任务调度问题 ===" << std::endl;
 
   // 算法导论示例数据
@@ -269,9 +269,9 @@ void testTaskScheduling() {
   }
 
   // 使用贪心算法求解
-  auto result = TaskScheduling::greedyTaskScheduling(tasks);
+  auto result = TaskScheduling::greedy_task_scheduling(tasks);
   auto &schedule = result.first;
-  int totalPenalty = result.second;
+  int total_penalty = result.second;
 
   std::cout << "\n贪心算法调度结果：" << std::endl;
   std::cout << "调度顺序：";
@@ -283,14 +283,14 @@ void testTaskScheduling() {
   }
   std::cout << std::endl;
 
-  std::cout << "未安排的任务惩罚：" << totalPenalty << std::endl;
+  std::cout << "未安排的任务惩罚：" << total_penalty << std::endl;
   std::cout << "调度可行性："
-            << (TaskScheduling::validateSchedule(schedule) ? "✓ 可行"
+            << (TaskScheduling::validate_schedule(schedule) ? "✓ 可行"
                                                            : "✗ 不可行")
             << std::endl;
 
   std::cout << "\n拟阵理论在任务调度中的应用：" << std::endl;
-  std::cout << TaskScheduling::explainMatroidApplication() << std::endl;
+  std::cout << TaskScheduling::explain_matroid_application() << std::endl;
   std::cout << std::endl;
 
   // 验证贪心算法的正确性
@@ -307,13 +307,13 @@ int main() {
   std::cout << "==================================" << std::endl;
   std::cout << std::endl;
 
-  testActivitySelection();
-  testHuffmanCoding();
-  testFractionalKnapsack();
-  testGreedyPrinciples();
-  testGreedyVsDynamicProgramming();
-  testMatroidTheory();
-  testTaskScheduling();
+  test_activity_selection();
+  test_huffman_coding();
+  test_fractional_knapsack();
+  test_greedy_principles();
+  test_greedy_vs_dynamic_programming();
+  test_matroid_theory();
+  test_task_scheduling();
 
   std::cout << "=== 所有测试完成 ===" << std::endl;
   std::cout << "第16章贪心算法实现验证成功！" << std::endl;

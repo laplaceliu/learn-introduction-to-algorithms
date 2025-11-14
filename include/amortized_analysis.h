@@ -66,7 +66,7 @@ public:
    * @brief 获取当前计数值
    * @return 十进制表示的计数值
    */
-  int getValue() const {
+  int get_value() const {
     int value = 0;
     for (int i = 0; i < bits.size(); ++i) {
       if (bits[i]) {
@@ -80,7 +80,7 @@ public:
    * @brief 获取二进制表示
    * @return 二进制字符串（高位在前）
    */
-  std::string getBinaryString() const {
+  std::string get_binary_string() const {
     std::string result;
     for (int i = bits.size() - 1; i >= 0; --i) {
       result += bits[i] ? '1' : '0';
@@ -92,7 +92,7 @@ public:
    * @brief 获取总翻转次数
    * @return 所有INCREMENT操作的总翻转次数
    */
-  int getTotalFlips() const { return flip_count; }
+  int get_total_flips() const { return flip_count; }
 
   /**
    * @brief 重置计数器
@@ -172,7 +172,7 @@ public:
    * @brief 获取当前信用
    * @return 当前信用值
    */
-  int getCredit() const { return credit; }
+  int get_credit() const { return credit; }
 
   /**
    * @brief 获取栈大小
@@ -197,7 +197,7 @@ private:
   /**
    * @brief 扩张表
    */
-  void expandTable() {
+  void expand_table() {
     int new_size = size * 2;
     std::vector<int> new_table(new_size);
 
@@ -214,7 +214,7 @@ private:
   /**
    * @brief 收缩表
    */
-  void contractTable() {
+  void contract_table() {
     int new_size = size / 2;
     std::vector<int> new_table(new_size);
 
@@ -247,7 +247,7 @@ public:
     int actual_cost = 1; // 基本插入代价
 
     if (num == size) {
-      expandTable();
+      expand_table();
       actual_cost += num; // 加上扩张代价
     }
 
@@ -260,7 +260,7 @@ public:
    * @brief 删除最后一个元素
    * @return 实际代价
    */
-  int deleteLast() {
+  int delete_last() {
     if (num == 0) {
       throw std::underflow_error("表为空");
     }
@@ -268,7 +268,7 @@ public:
     int actual_cost = 1; // 基本删除代价
 
     if (num <= size / 4 && size > 1) {
-      contractTable();
+      contract_table();
       actual_cost += num; // 加上收缩代价
     }
 
@@ -280,31 +280,31 @@ public:
    * @brief 获取表的大小
    * @return 表的容量
    */
-  int getSize() const { return size; }
+  int get_size() const { return size; }
 
   /**
    * @brief 获取元素数量
    * @return 表中元素数量
    */
-  int getNum() const { return num; }
+  int get_num() const { return num; }
 
   /**
    * @brief 获取总扩张代价
    * @return 扩张操作的总代价
    */
-  int getExpansionCost() const { return expansion_cost; }
+  int get_expansion_cost() const { return expansion_cost; }
 
   /**
    * @brief 获取总插入代价
    * @return 插入操作的总代价
    */
-  int getInsertionCost() const { return insertion_cost; }
+  int get_insertion_cost() const { return insertion_cost; }
 
   /**
    * @brief 获取势能函数值
    * @return 当前势能
    */
-  int getPotential() const { return 2 * num - size; }
+  int get_potential() const { return 2 * num - size; }
 
   /**
    * @brief 重置表
@@ -344,7 +344,7 @@ public:
    * @param new_potential 新的势能值
    * @return 摊还代价
    */
-  int recordOperation(int actual_cost, int new_potential) {
+  int record_operation(int actual_cost, int new_potential) {
     int amortized_cost = actual_cost + new_potential - potential_current;
 
     actual_cost_total += actual_cost;
@@ -359,19 +359,19 @@ public:
    * @brief 获取总实际代价
    * @return 总实际代价
    */
-  int getTotalActualCost() const { return actual_cost_total; }
+  int get_total_actual_cost() const { return actual_cost_total; }
 
   /**
    * @brief 获取当前势能
    * @return 当前势能值
    */
-  int getCurrentPotential() const { return potential_current; }
+  int get_current_potential() const { return potential_current; }
 
   /**
    * @brief 获取操作次数
    * @return 操作次数
    */
-  int getOperationCount() const { return operation_count; }
+  int get_operation_count() const { return operation_count; }
 
   /**
    * @brief 重置分析器

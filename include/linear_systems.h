@@ -24,10 +24,10 @@ public:
    * @param b 常数向量
    * @return std::vector<double> 解向量
    */
-  static std::vector<double> gaussianElimination(const Matrix &A,
+  static std::vector<double> gaussian_elimination(const Matrix &A,
                                                  const std::vector<double> &b) {
-    int n = A.getRows();
-    if (n != A.getCols() || n != b.size())
+    int n = A.get_rows();
+    if (n != A.get_cols() || n != b.size())
       throw std::invalid_argument(
           "Matrix dimensions must match for Gaussian elimination");
 
@@ -43,17 +43,17 @@ public:
     // 前向消元
     for (int i = 0; i < n; i++) {
       // 寻找主元
-      int maxRow = i;
+      int max_row = i;
       for (int k = i + 1; k < n; k++) {
-        if (std::abs(aug(k, i)) > std::abs(aug(maxRow, i))) {
-          maxRow = k;
+        if (std::abs(aug(k, i)) > std::abs(aug(max_row, i))) {
+          max_row = k;
         }
       }
 
       // 交换行
-      if (maxRow != i) {
+      if (max_row != i) {
         for (int j = i; j <= n; j++) {
-          std::swap(aug(i, j), aug(maxRow, j));
+          std::swap(aug(i, j), aug(max_row, j));
         }
       }
 
@@ -93,10 +93,10 @@ public:
    * @param b 常数向量
    * @return std::vector<double> 解向量
    */
-  static std::vector<double> luDecomposition(const Matrix &A,
+  static std::vector<double> lu_decomposition(const Matrix &A,
                                              const std::vector<double> &b) {
-    int n = A.getRows();
-    if (n != A.getCols() || n != b.size())
+    int n = A.get_rows();
+    if (n != A.get_cols() || n != b.size())
       throw std::invalid_argument(
           "Matrix dimensions must match for LU decomposition");
 
@@ -162,12 +162,12 @@ public:
    * @param tolerance 容差
    * @return std::vector<double> 解向量
    */
-  static std::vector<double> jacobiIteration(const Matrix &A,
+  static std::vector<double> jacobi_iteration(const Matrix &A,
                                              const std::vector<double> &b,
                                              int max_iterations = 1000,
                                              double tolerance = 1e-10) {
-    int n = A.getRows();
-    if (n != A.getCols() || n != b.size())
+    int n = A.get_rows();
+    if (n != A.get_cols() || n != b.size())
       throw std::invalid_argument(
           "Matrix dimensions must match for Jacobi iteration");
 
@@ -208,9 +208,9 @@ public:
    * @param A 矩阵
    * @return bool 是否对角占优
    */
-  static bool isDiagonallyDominant(const Matrix &A) {
-    int n = A.getRows();
-    if (n != A.getCols())
+  static bool is_diagonally_dominant(const Matrix &A) {
+    int n = A.get_rows();
+    if (n != A.get_cols())
       return false;
 
     for (int i = 0; i < n; i++) {
@@ -241,7 +241,7 @@ public:
    */
   static double residual(const Matrix &A, const std::vector<double> &b,
                          const std::vector<double> &x) {
-    int n = A.getRows();
+    int n = A.get_rows();
     double residual_norm = 0.0;
 
     for (int i = 0; i < n; i++) {

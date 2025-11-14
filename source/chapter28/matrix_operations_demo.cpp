@@ -27,8 +27,8 @@ void test_matrix_operations() {
   std::cout << "矩阵A：" << std::endl;
   A.print();
 
-  assert(A.getRows() == 2);
-  assert(A.getCols() == 3);
+  assert(A.get_rows() == 2);
+  assert(A.get_cols() == 3);
   assert(A(0, 0) == 1.0);
   assert(A(1, 2) == 6.0);
   std::cout << "✓ 矩阵创建和基本操作测试通过" << std::endl;
@@ -73,8 +73,8 @@ void test_matrix_operations() {
   std::cout << "矩阵A * E：" << std::endl;
   F.print();
 
-  assert(F.getRows() == 2);
-  assert(F.getCols() == 2);
+  assert(F.get_rows() == 2);
+  assert(F.get_cols() == 2);
   assert(std::abs(F(0, 0) - 22.0) < 1e-10);
   assert(std::abs(F(1, 1) - 64.0) < 1e-10);
   std::cout << "✓ 矩阵乘法测试通过" << std::endl;
@@ -92,8 +92,8 @@ void test_matrix_operations() {
 
   assert(G(0, 0) == 2.0);
   assert(G(1, 2) == 12.0);
-  assert(H.getRows() == 3);
-  assert(H.getCols() == 2);
+  assert(H.get_rows() == 3);
+  assert(H.get_cols() == 2);
   assert(H(0, 0) == 1.0);
   assert(H(2, 1) == 6.0);
   std::cout << "✓ 标量乘法和转置测试通过" << std::endl;
@@ -111,9 +111,9 @@ void test_matrix_operations() {
   J(1, 0) = 2.0;
   J(1, 1) = 1.0;
 
-  assert(I.isSymmetric());
-  assert(J.isSymmetric());
-  assert(!A.isSymmetric());
+  assert(I.is_symmetric());
+  assert(J.is_symmetric());
+  assert(!A.is_symmetric());
   std::cout << "✓ 单位矩阵和对称性检查测试通过" << std::endl;
 
   // 测试用例6：矩阵工具函数
@@ -161,7 +161,7 @@ void test_linear_systems() {
 
   std::vector<double> b = {8.0, -11.0, -3.0};
 
-  std::vector<double> x_gauss = LinearSystemSolver::gaussianElimination(A, b);
+  std::vector<double> x_gauss = LinearSystemSolver::gaussian_elimination(A, b);
 
   std::cout << "高斯消元法解：[";
   for (size_t i = 0; i < x_gauss.size(); i++) {
@@ -182,7 +182,7 @@ void test_linear_systems() {
 
   // 测试用例2：LU分解法
   std::cout << "\n2. LU分解法测试：" << std::endl;
-  std::vector<double> x_lu = LinearSystemSolver::luDecomposition(A, b);
+  std::vector<double> x_lu = LinearSystemSolver::lu_decomposition(A, b);
 
   std::cout << "LU分解法解：[";
   for (size_t i = 0; i < x_lu.size(); i++) {
@@ -216,10 +216,10 @@ void test_linear_systems() {
 
   std::vector<double> c = {6.0, 25.0, -11.0};
 
-  assert(LinearSystemSolver::isDiagonallyDominant(B));
+  assert(LinearSystemSolver::is_diagonally_dominant(B));
 
   std::vector<double> x_jacobi =
-      LinearSystemSolver::jacobiIteration(B, c, 100, 1e-10);
+      LinearSystemSolver::jacobi_iteration(B, c, 100, 1e-10);
 
   std::cout << "雅可比迭代法解：[";
   for (size_t i = 0; i < x_jacobi.size(); i++) {
@@ -247,7 +247,7 @@ void test_linear_systems() {
 
   try {
     std::vector<double> x_singular =
-        LinearSystemSolver::gaussianElimination(C, d);
+        LinearSystemSolver::gaussian_elimination(C, d);
     std::cout << "✗ 奇异矩阵检测失败" << std::endl;
   } catch (const std::runtime_error &e) {
     std::cout << "✓ 奇异矩阵检测成功：" << e.what() << std::endl;
@@ -275,14 +275,14 @@ void test_matrix_inversion() {
   A(2, 1) = -1.0;
   A(2, 2) = 2.0;
 
-  Matrix A_inv_gj = MatrixInverter::gaussJordanInversion(A);
+  Matrix A_inv_gj = MatrixInverter::gauss_jordan_inversion(A);
 
   std::cout << "原矩阵A：" << std::endl;
   A.print();
   std::cout << "逆矩阵A⁻¹（高斯-约当法）：" << std::endl;
   A_inv_gj.print();
 
-  bool valid_gj = MatrixInverter::verifyInversion(A, A_inv_gj);
+  bool valid_gj = MatrixInverter::verify_inversion(A, A_inv_gj);
   std::cout << "逆矩阵验证：" << (valid_gj ? "通过" : "失败") << std::endl;
 
   assert(valid_gj);
@@ -290,12 +290,12 @@ void test_matrix_inversion() {
 
   // 测试用例2：LU分解法求逆
   std::cout << "\n2. LU分解法求逆测试：" << std::endl;
-  Matrix A_inv_lu = MatrixInverter::luInversion(A);
+  Matrix A_inv_lu = MatrixInverter::lu_inversion(A);
 
   std::cout << "逆矩阵A⁻¹（LU分解法）：" << std::endl;
   A_inv_lu.print();
 
-  bool valid_lu = MatrixInverter::verifyInversion(A, A_inv_lu);
+  bool valid_lu = MatrixInverter::verify_inversion(A, A_inv_lu);
   std::cout << "逆矩阵验证：" << (valid_lu ? "通过" : "失败") << std::endl;
 
   assert(valid_lu);
@@ -309,14 +309,14 @@ void test_matrix_inversion() {
   B(1, 0) = 2.0;
   B(1, 1) = 6.0;
 
-  Matrix B_inv_adj = MatrixInverter::adjugateInversion(B);
+  Matrix B_inv_adj = MatrixInverter::adjugate_inversion(B);
 
   std::cout << "原矩阵B：" << std::endl;
   B.print();
   std::cout << "逆矩阵B⁻¹（伴随矩阵法）：" << std::endl;
   B_inv_adj.print();
 
-  bool valid_adj = MatrixInverter::verifyInversion(B, B_inv_adj);
+  bool valid_adj = MatrixInverter::verify_inversion(B, B_inv_adj);
   std::cout << "逆矩阵验证：" << (valid_adj ? "通过" : "失败") << std::endl;
 
   assert(valid_adj);
@@ -324,21 +324,21 @@ void test_matrix_inversion() {
 
   // 测试用例4：可逆性检查和条件数
   std::cout << "\n4. 可逆性检查和条件数测试：" << std::endl;
-  bool invertible_A = MatrixInverter::isInvertible(A);
-  bool invertible_B = MatrixInverter::isInvertible(B);
+  bool invertible_A = MatrixInverter::is_invertible(A);
+  bool invertible_B = MatrixInverter::is_invertible(B);
 
   Matrix C(2, 2);
   C(0, 0) = 1.0;
   C(0, 1) = 1.0;
   C(1, 0) = 1.0;
   C(1, 1) = 1.0;
-  bool invertible_C = MatrixInverter::isInvertible(C);
+  bool invertible_C = MatrixInverter::is_invertible(C);
 
   std::cout << "矩阵A可逆：" << (invertible_A ? "是" : "否") << std::endl;
   std::cout << "矩阵B可逆：" << (invertible_B ? "是" : "否") << std::endl;
   std::cout << "矩阵C可逆：" << (invertible_C ? "是" : "否") << std::endl;
 
-  double cond_A = MatrixInverter::conditionNumber(A);
+  double cond_A = MatrixInverter::condition_number(A);
   std::cout << "矩阵A的条件数：" << cond_A << std::endl;
 
   assert(invertible_A);
