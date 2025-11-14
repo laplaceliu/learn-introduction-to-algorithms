@@ -19,6 +19,9 @@ learn-introduction-to-algorithms/
 ├── include/                 # 扁平结构头文件目录
 │   ├── algorithm_basics.h  # 2章算法基础
 │   ├── divide_and_conquer.h # 4章分治策略
+│   ├── linear_systems.h    # 28.2节线性方程组求解
+│   ├── matrix_inversion.h  # 28.3节矩阵求逆
+│   ├── matrix_operations.h # 28.1节矩阵运算基础
 │   ├── heap.h              # 6.1节堆数据结构
 │   ├── priority_queue.h    # 6.4节优先队列
 │   ├── probabilistic_analysis.h # 5章概率分析和随机算法
@@ -51,6 +54,9 @@ learn-introduction-to-algorithms/
     ├── chapter02/
     │   └── algorithm_basics_demo.cpp # 2章算法基础演示程序
     ├── chapter04/
+    │   └── divide_and_conquer_demo.cpp # 4章分治策略演示程序
+    ├── chapter28/
+    │   └── matrix_operations_demo.cpp # 28章矩阵运算演示程序
     │   └── divide_and_conquer_demo.cpp # 4章分治策略演示程序
     ├── chapter6/
     │   ├── heap_demo.cpp              # 6.1节堆演示程序

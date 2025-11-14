@@ -1,4 +1,4 @@
-#include "../../include/algorithm_basics.h"
+#include "algorithm_basics.h"
 #include <algorithm>
 #include <cassert>
 #include <iostream>
